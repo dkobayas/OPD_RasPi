@@ -26,10 +26,11 @@ class MCP3208_Class:
 
 if __name__ == '__main__':
     ADC = MCP3208_Class(ref_volts=1.65)
-    ofname = input('input file name: ') ### it is for python3 only. this causes an error with python2
-    t_thr = input('measurement time[s]: ') ### it is for python3 only. this causes an error with python2
+    ofname = input('- data tag: ') ### it is for python3 only. this causes an error with python2
+    t_thr = input('- measurement time[s]: ') ### it is for python3 only. this causes an error with python2
     file = open("../Data/dat/"+ofname+".dat", 'w')
     t_start = time.time()
+    count = 0
     try:
         while True:
             t_current = time.time() - t_start
@@ -38,6 +39,9 @@ if __name__ == '__main__':
             #print("volts: P1: {:4.3}, P2: {:4.3}".format(volts0, volts1))
             file.write("{:4.4} {:4.4} {:4.4}\n".format(t_current, volts0, volts1))
             time.sleep(1)
+            if t_current > float(t_thr)*float(count)/20.0:
+                print("= {:2.2}%".format(float(count/20.0*100)))
+                count = count + 1
             if t_current > float(t_thr):
                 print("finish with measurement time: {:1.5}[s]".format(t_current))
                 break
