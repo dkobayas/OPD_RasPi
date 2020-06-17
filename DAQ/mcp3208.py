@@ -18,7 +18,7 @@ class MCP3208_Class:
         #data = ((adc[1]&3) << 8) + adc[2]
         data = ((adc[1]&0x0f) << 8) + adc[2]
         volts = (data * self.ref_volts) / float(1023)
-        volts = round(volts, 4)
+        volts = round(volts, 5)
         return volts
 
     def Cleanup(self):
@@ -30,7 +30,9 @@ if __name__ == '__main__':
     t_thr = input('- measurement time[s]: ') ### it is for python3 only. this causes an error with python2
     file = open("../Data/dat/"+ofname+".dat", 'w')
     t_start = time.time()
+    count20 = 0
     count = 0
+    time.sleep(1)
     try:
         while True:
             t_current = time.time() - t_start
@@ -38,12 +40,14 @@ if __name__ == '__main__':
             volts1 = ADC.GetVoltage(ch=1)
             #print("volts: P1: {:4.3}, P2: {:4.3}".format(volts0, volts1))
             file.write("{:4.4} {:4.4} {:4.4}\n".format(t_current, volts0, volts1))
+            count = count + 1
             time.sleep(1)
-            if t_current > float(t_thr)*float(count)/20.0:
-                print("= {:2.2}%".format(float(count/20.0*100)))
-                count = count + 1
+            if t_current > float(t_thr)*float(count20)/20.0:
+                print("= {:3.3}% done".format(float(count20/20.0*100)))
+                count20 = count20 + 1
             if t_current > float(t_thr):
                 print("finish with measurement time: {:1.5}[s]".format(t_current))
+                print("- n events: {0}".format(count))
                 break
 
     except KeyboardInterrupt:
@@ -53,4 +57,5 @@ if __name__ == '__main__':
     finally:
         ADC.Cleanup()
         file.close()
-        print("exit program")
+        print("successfully done!")
+
