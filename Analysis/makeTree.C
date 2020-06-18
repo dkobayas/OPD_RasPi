@@ -8,7 +8,7 @@ int makeTree( TString filename="sample"){
         float time = -1;	
 	float adc0 = -1;
 	float adc1 = -1;
-	TTree *tree = new TTree("OPD_data", "OPD_data");
+	TTree *tree = new TTree("raw", "raw");
 	tree->Branch("Time", &time, "Time");
 	tree->Branch("ADC0", &adc0, "ADC0");
 	tree->Branch("ADC1", &adc1, "ADC1");
